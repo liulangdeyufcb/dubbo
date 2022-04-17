@@ -202,6 +202,7 @@ public class DefaultApplicationDeployer extends AbstractDeployer<ApplicationMode
             initModuleDeployers();
 
             // @since 2.7.8
+            //元数据上报
             startMetadataCenter();
 
             initMetadataService();

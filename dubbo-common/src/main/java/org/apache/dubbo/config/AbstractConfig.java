@@ -613,6 +613,7 @@ public abstract class AbstractConfig implements Serializable {
             assignProperties(this, environment, subProperties, subPropsConfiguration);
 
             // process extra refresh of sub class, e.g. refresh method configs
+            //这段refresh核心用意是处理出来这个preferredPrefix，其他的配置信息也会一并做一些处理
             processExtraRefresh(preferredPrefix, subPropsConfiguration);
 
         } catch (Exception e) {

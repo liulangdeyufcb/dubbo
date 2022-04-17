@@ -205,6 +205,8 @@ public class ServiceConfig<T> extends ServiceConfigBase<T> {
             ExtensionLoader<ServiceListener> extensionLoader = this.getExtensionLoader(ServiceListener.class);
             this.serviceListeners.addAll(extensionLoader.getSupportedExtensionInstances());
         }
+        //初始化Service metadata服务元数据
+        //metadata center，元数据中心
         initServiceMetadata(provider);
         serviceMetadata.setServiceType(getInterfaceClass());
         serviceMetadata.setTarget(getRef());
@@ -379,6 +381,9 @@ public class ServiceConfig<T> extends ServiceConfigBase<T> {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     private void doExportUrls() {
+        //ScopeModel，真实的类型叫做ModuleModel
+        //getScopeModel()，再去获取service repository，以及之前也获取过其他的组件
+        //dubbo这里，把他的各个组件，都集中在ScopeModel=MoudleModel，ScopeModel就类似于设计模式里的门面模式
         ModuleServiceRepository repository = getScopeModel().getServiceRepository();
         ServiceDescriptor serviceDescriptor = repository.registerService(getInterfaceClass());
         providerModel = new ProviderModel(getUniqueServiceName(),
