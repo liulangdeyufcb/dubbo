@@ -44,6 +44,7 @@ public class JavassistProxyFactory extends AbstractProxyFactory {
             protected Object doInvoke(T proxy, String methodName,
                                       Class<?>[] parameterTypes,
                                       Object[] arguments) throws Throwable {
+                //这个invoker后续被调用的时候,一定会执行到这里,通过JDK反射代理的技术，去调用我们的实际的实现类DemoServiceImpl.sayHello()
                 return wrapper.invokeMethod(proxy, methodName, parameterTypes, arguments);
             }
         };

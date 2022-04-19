@@ -384,7 +384,11 @@ public class ServiceConfig<T> extends ServiceConfigBase<T> {
         //ScopeModel，真实的类型叫做ModuleModel
         //getScopeModel()，再去获取service repository，以及之前也获取过其他的组件
         //dubbo这里，把他的各个组件，都集中在ScopeModel=MoudleModel，ScopeModel就类似于设计模式里的门面模式
+
+        //ServiceRepository，核心本质是dubbo服务数据存储组件
+        //一个系统可以发布多个dubbo服务，每个dubbo服务的本质和核心就一个interface和一个实现类
         ModuleServiceRepository repository = getScopeModel().getServiceRepository();
+        //把当前要发布的服务存储到dubbo服务数据存储组件里去，repository
         ServiceDescriptor serviceDescriptor = repository.registerService(getInterfaceClass());
         providerModel = new ProviderModel(getUniqueServiceName(),
             ref,
@@ -394,7 +398,7 @@ public class ServiceConfig<T> extends ServiceConfigBase<T> {
             serviceMetadata);
 
         repository.registerProvider(providerModel);
-
+        //生成的注册的URL，本身是2181的端口号，是针对ZK进行注册的
         List<URL> registryURLs = ConfigValidationUtils.loadRegistries(this, true);
 
         for (ProtocolConfig protocolConfig : protocols) {
@@ -649,6 +653,8 @@ public class ServiceConfig<T> extends ServiceConfigBase<T> {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     private void doExportUrl(URL url, boolean withMetaData) {
+        //Invoker调用组件，当dubbo的netty server对外网络监听到连接，处理请求，必须要对请求有一个调用组件，可以去远程调用
+        //ProxyFactory基于DemoService接口生成的动态代理，被调用接口的时候，底层会回调自己写的实现类
         Invoker<?> invoker = proxyFactory.getInvoker(ref, (Class) interfaceClass, url);
         if (withMetaData) {
             invoker = new DelegateProviderMetaDataInvoker(invoker, this);
