@@ -566,10 +566,12 @@ public class ExtensionLoader<T> {
      * Return default extension, return <code>null</code> if it's not configured.
      */
     public T getDefaultExtension() {
+        //根据SPI的规范,去读取配置,加载你的实现类
         getExtensionClasses();
         if (StringUtils.isBlank(cachedDefaultName) || "true".equals(cachedDefaultName)) {
             return null;
         }
+        //加载完毕过后,此时就可以根据缓存默认的名称,去获取你需要的一个默认实现类
         return getExtension(cachedDefaultName);
     }
 

@@ -64,6 +64,7 @@ public class ZookeeperDynamicConfiguration extends TreePathDynamicConfiguration 
                 new NamedThreadFactory(threadName, true),
                 new AbortPolicyWithReport(threadName, url));
 
+        //基于zookeeperTransporter连接到了zk  url去了，拿到一个ZookeeperClient
         zkClient = zookeeperTransporter.connect(url);
         boolean isConnected = zkClient.isConnected();
         if (!isConnected) {
@@ -91,6 +92,7 @@ public class ZookeeperDynamicConfiguration extends TreePathDynamicConfiguration 
 
     @Override
     protected boolean doPublishConfig(String pathKey, String content) throws Exception {
+        //把一个配置项写入到zk里去，配置项要自定义一个path
         zkClient.create(pathKey, content, false);
         return true;
     }

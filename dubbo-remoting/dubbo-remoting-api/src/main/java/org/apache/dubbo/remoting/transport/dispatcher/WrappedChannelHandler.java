@@ -77,7 +77,7 @@ public class WrappedChannelHandler implements ChannelHandlerDelegate {
     protected void sendFeedback(Channel channel, Request request, Throwable t) throws RemotingException {
         if (request.isTwoWay()) {
             String msg = "Server side(" + url.getIp() + "," + url.getPort()
-                    + ") thread pool is exhausted, detail msg:" + t.getMessage();
+                + ") thread pool is exhausted, detail msg:" + t.getMessage();
             Response response = new Response(request.getId(), request.getVersion());
             response.setStatus(Response.SERVER_THREADPOOL_EXHAUSTED_ERROR);
             response.setErrorMessage(msg);
@@ -140,10 +140,13 @@ public class WrappedChannelHandler implements ChannelHandlerDelegate {
 
         // note: url.getOrDefaultApplicationModel() may create new application model
         ApplicationModel applicationModel = url.getOrDefaultApplicationModel();
+        //基于SPI扩展机制，去获取你的实现类对象,ExecutorRepository主要是获取你的线程池的组件
         ExecutorRepository executorRepository =
-                applicationModel.getExtensionLoader(ExecutorRepository.class).getDefaultExtension();
+            applicationModel.getExtensionLoader(ExecutorRepository.class).getDefaultExtension();
+        //传进去一个URL，从URL里面提取一些参数出来，会根据URL的参数来决定要获取到什么样的线程池
         ExecutorService executor = executorRepository.getExecutor(url);
         if (executor == null) {
+            //创建和构建线程池
             executor = executorRepository.createExecutorIfAbsent(url);
         }
         return executor;

@@ -37,8 +37,13 @@ public class AllChannelHandler extends WrappedChannelHandler {
 
     @Override
     public void connected(Channel channel) throws RemotingException {
+
+
+        //有一个网络连接完成建立的事件,Channel就代表了一个网络连接的成功的建立
+        //针对网络连接建立的事件,此时就会拿到一个业务线程池
         ExecutorService executor = getSharedExecutorService();
         try {
+            //线程池进去以后,后续就会封装一个任务
             executor.execute(new ChannelEventRunnable(channel, handler, ChannelState.CONNECTED));
         } catch (Throwable t) {
             throw new ExecutionException("connect event", channel, getClass() + " error when process connected event .", t);
@@ -61,7 +66,7 @@ public class AllChannelHandler extends WrappedChannelHandler {
         try {
             executor.execute(new ChannelEventRunnable(channel, handler, ChannelState.RECEIVED, message));
         } catch (Throwable t) {
-            if(message instanceof Request && t instanceof RejectedExecutionException){
+            if (message instanceof Request && t instanceof RejectedExecutionException) {
                 sendFeedback(channel, (Request) message, t);
                 return;
             }
@@ -71,6 +76,7 @@ public class AllChannelHandler extends WrappedChannelHandler {
 
     @Override
     public void caught(Channel channel, Throwable exception) throws RemotingException {
+        //如果在网络通信的过程中捕获到异常
         ExecutorService executor = getSharedExecutorService();
         try {
             executor.execute(new ChannelEventRunnable(channel, handler, ChannelState.CAUGHT, exception));

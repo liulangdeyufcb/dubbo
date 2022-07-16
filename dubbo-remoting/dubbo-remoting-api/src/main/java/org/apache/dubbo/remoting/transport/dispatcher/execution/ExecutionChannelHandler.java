@@ -42,8 +42,9 @@ public class ExecutionChannelHandler extends WrappedChannelHandler {
 
     @Override
     public void received(Channel channel, Object message) throws RemotingException {
+        //先获取一个线程池
         ExecutorService executor = getPreferredExecutorService(message);
-
+        //消息必须是一个请求类型，不是是响应类型，才能交给业务线程池来进行处理
         if (message instanceof Request) {
             try {
                 executor.execute(new ChannelEventRunnable(channel, handler, ChannelState.RECEIVED, message));

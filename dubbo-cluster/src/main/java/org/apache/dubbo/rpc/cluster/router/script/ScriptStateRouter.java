@@ -135,6 +135,8 @@ public class ScriptStateRouter<T> extends AbstractStateRouter<T> {
         Bindings bindings = createBindings(invokers, invocation);
         return new StateRouterResult<>(getRoutedInvokers(invokers, AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
             try {
+                //使用xx.eval()方法，都是在动态的运行脚本语言
+                //bindings就是一些数据，可以传入到脚本里面去让脚本来进行处理
                 return function.eval(bindings);
             } catch (ScriptException e) {
                 logger.error("route error, rule has been ignored. rule: " + rule + ", method:" +

@@ -52,6 +52,7 @@ public class ChannelEventRunnable implements Runnable {
 
     @Override
     public void run() {
+        //
         if (state == ChannelState.RECEIVED) {
             try {
                 handler.received(channel, message);

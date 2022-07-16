@@ -659,12 +659,16 @@ public class ServiceConfig<T> extends ServiceConfigBase<T> {
         if (withMetaData) {
             invoker = new DelegateProviderMetaDataInvoker(invoker, this);
         }
+        //RegistryProtocol，里面除了
+
         Exporter<?> exporter = protocolSPI.export(invoker);
         exporters.add(exporter);
     }
 
 
     /**
+     * 发布到本地，也就是系统内部，jvm内部做一次export发布就可以了
+     * 在jvm内部完成了组件之间的一些交互关系和发布
      * always export injvm
      */
     private void exportLocal(URL url) {

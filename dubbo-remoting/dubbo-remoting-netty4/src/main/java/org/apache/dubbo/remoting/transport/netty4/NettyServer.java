@@ -97,7 +97,12 @@ public class NettyServer extends AbstractServer {
     protected void doOpen() throws Throwable {
         bootstrap = new ServerBootstrap();
 
+        //EventLoop，网络服务器，最核心的是监听一个本地的端口号
+        //所以外部的系统针对自己本地服务器的端口号发起的所有的连接、通信、网络事件
+        //监听的端口号会不停的产生网络事件，网络服务器，核心是不停的去loop轮询监听网络事件
+        //boss负责对你的端口号监听是否有外部系统的连接请求，可以是一个event loop group
         bossGroup = NettyEventLoopFactory.eventLoopGroup(1, EVENT_LOOP_BOSS_POOL_NAME);
+        //如果说发现了网络事件，需要进行处理
         workerGroup = NettyEventLoopFactory.eventLoopGroup(
                 getUrl().getPositiveParameter(IO_THREADS_KEY, Constants.DEFAULT_IO_THREADS),
             EVENT_LOOP_WORKER_POOL_NAME);

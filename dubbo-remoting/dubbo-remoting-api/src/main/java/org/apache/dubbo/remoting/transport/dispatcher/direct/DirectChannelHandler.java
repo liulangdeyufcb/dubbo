@@ -36,6 +36,9 @@ public class DirectChannelHandler extends WrappedChannelHandler {
 
     @Override
     public void received(Channel channel, Object message) throws RemotingException {
+        //在这个里面,只有received message，这个时候会放到业务线程池里去进行处理
+        //connected、disconnected、caught,都是放到业务线程池里去进行处理,都是在网络IO线程里处理的
+        //分发策略的语义，所有事件都是在IO线程里执行的
         ExecutorService executor = getPreferredExecutorService(message);
         if (executor instanceof ThreadlessExecutor) {
             try {
@@ -44,6 +47,7 @@ public class DirectChannelHandler extends WrappedChannelHandler {
                 throw new ExecutionException(message, channel, getClass() + " error when process received event .", t);
             }
         } else {
+            //直接用handler来进行处理，直接在IO线程上进行处理
             handler.received(channel, message);
         }
     }

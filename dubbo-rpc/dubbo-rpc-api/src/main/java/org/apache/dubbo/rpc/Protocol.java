@@ -39,6 +39,7 @@ public interface Protocol {
 
     /**
      * Export service for remote invocation: <br>
+     *     Protocol接收到一个请求之后，必须要记录下来请求的源地址
      * 1. Protocol should record request source address after receive a request:
      * RpcContext.getServerAttachment().setRemoteAddress();<br>
      * 2. export() must be idempotent, that is, there's no difference between invoking once and invoking twice when

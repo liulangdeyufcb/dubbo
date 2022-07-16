@@ -34,6 +34,7 @@ public interface ZookeeperTransporter {
     void destroy();
 
     static ZookeeperTransporter getExtension(ApplicationModel applicationModel) {
+        //SPI机制
         ExtensionLoader<ZookeeperTransporter> extensionLoader = applicationModel.getExtensionLoader(ZookeeperTransporter.class);
         boolean isHighVersion = isHighVersionCurator();
         if (isHighVersion) {
